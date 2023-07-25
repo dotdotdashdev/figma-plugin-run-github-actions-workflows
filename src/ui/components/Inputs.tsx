@@ -18,6 +18,11 @@ export function Inputs(): JSX.Element {
         required
         onValueInput={fileKey => dispatch({ type: 'EDIT_FILE_KEY', fileKey })}
         value={settings.fileKey || ''} />
+      <Input
+        label='branchUrl'
+        required
+        onValueInput={branchUrl => dispatch({ type: 'EDIT_BRANCH_URL', branchUrl })}
+        value={settings.branchUrl || ''} />
 
       <Input
         label='page'

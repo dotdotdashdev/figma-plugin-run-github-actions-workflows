@@ -5,6 +5,9 @@ inputs:
   fileKey:
     description: Figma file key
     required: true
+  branchUrl:
+    description: Figma branch url
+    required: true
   page:
     description: Stringified selected page (id, name)
     required: true
@@ -15,6 +18,8 @@ inputs:
 outputs:
   fileKey:
     description: Figma file key
+  branchUrl:
+    description: Figma branch url
   page:
     description: Selected page name
   selection:

@@ -7,6 +7,10 @@ on:
         description: Figma file key
         type: string
         required: true
+      branchUrl:
+        description: Figma branch url
+        type: string
+        required: true
       page:
         description: Stringified selected page (id, name)
         type: string
@@ -31,15 +35,18 @@ jobs:
         uses: ./.github/actions/run-github-actions-workflows-transformer
         with:
           fileKey: ${{ github.event.inputs.fileKey }}
+          branchUrl: ${{ github.event.inputs.branchUrl }}
           page: ${{ github.event.inputs.page }}
           selection: ${{ github.event.inputs.selection }}
 
       - name: Log ℹ️
         run: |
           echo "fileKey: $fileKey"
+          echo "branchUrl: $branchUrl"
           echo "page: $page"
           echo "selection: $selection"
         env:
           fileKey: ${{ steps.transform.outputs.fileKey }}
+          branchUrl: ${{ steps.transform.outputs.branchUrl }}
           page: ${{ steps.transform.outputs.page }}
           selection: ${{ steps.transform.outputs.selection }}

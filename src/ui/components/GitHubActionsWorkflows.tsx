@@ -39,6 +39,7 @@ export function GitHubActionsWorkflows(): JSX.Element {
       console.log('workflow', { ...workflow, access_token: '***' })
       console.group('Inputs')
         console.log('fileKey', settings.fileKey)
+        console.log('branchUrl', settings.branchUrl)
         console.log('page', settings.page)
         console.log('selection', settings.selection)
       console.groupEnd()
@@ -55,6 +56,7 @@ export function GitHubActionsWorkflows(): JSX.Element {
         ref: workflow.ref,
         inputs: {
           fileKey: settings.fileKey,
+          branchUrl: settings.branchUrl,
           page: JSON.stringify(settings.page),
           selection: JSON.stringify(settings.selection)
         }
