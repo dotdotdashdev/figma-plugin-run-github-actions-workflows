@@ -9,7 +9,8 @@ export default function () {
           emit<LoadSettingsHandler>("LOAD_SETTINGS", {
             ...settings,
             loaded: true,
-            fileKey: figma.root.getPluginData("fileKey"),
+            // fileKey: figma.root.getPluginData("fileKey"),
+            currentUser: figma.root.getPluginData("currentUser"),
             branchUrl: figma.root.getPluginData("branchUrl"),
             title: figma.root.getPluginData("title"),
             description: figma.root.getPluginData("description"),
@@ -19,12 +20,13 @@ export default function () {
         });
       });
       
-      on<SaveSettingsHandler>("SAVE_SETTINGS", function ({ fileKey, branchUrl, title, description, workflows }) {
-        console.log({ figma, test: figma.root.name});
+      on<SaveSettingsHandler>("SAVE_SETTINGS", function ({ currentUser, branchUrl, title, description, workflows }) {
+        // console.log({ figma, test: figma.root.name, user: figma.currentUser});
         
         
         saveSettingsAsync<UserSettings>({ workflows }).then(() => {
-            figma.root.setPluginData("fileKey", fileKey || "");
+            // figma.root.setPluginData("fileKey", fileKey || "");
+            figma.root.setPluginData("currentUser", currentUser || "");
             figma.root.setPluginData("branchUrl", branchUrl || "");
             figma.root.setPluginData("title", title || "");
             figma.root.setPluginData("description", description || "");
@@ -36,7 +38,8 @@ export default function () {
         emit<InfoResponseHandler>(
             "INFO_RESPONSE",
             { id: figma.currentPage.id, name: figma.currentPage.name },
-            figma.currentPage.selection.map(({ id, name }) => ({ id, name }))
+            figma.currentPage.selection.map(({ id, name }) => ({ id, name })),
+            {name: figma?.currentUser?.name || ""}
         );
     });
 

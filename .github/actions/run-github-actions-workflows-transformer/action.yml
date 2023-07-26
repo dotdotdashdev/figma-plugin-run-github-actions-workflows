@@ -2,8 +2,11 @@ name: Run GitHub Actions workflows - Transformer
 description: Transform the "Run GitHub Actions workflows" payload
 
 inputs:
-  fileKey:
-    description: Figma file key
+  # fileKey:
+  #   description: Figma file key
+  #   required: true
+  currentUser:
+    description: Current user
     required: true
   branchUrl:
     description: Figma branch url
@@ -22,8 +25,10 @@ inputs:
     required: true
 
 outputs:
-  fileKey:
-    description: Figma file key
+  # fileKey:
+  #   description: Figma file key
+  currentUser:
+    description: Current user
   branchUrl:
     description: Figma branch url
   title:

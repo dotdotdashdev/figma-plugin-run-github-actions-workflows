@@ -28,7 +28,7 @@ export interface RequestInfoHandler extends EventHandler {
 
 export interface InfoResponseHandler extends EventHandler {
   name: 'INFO_RESPONSE'
-  handler: (page: Page, selection: Selection[]) => void
+  handler: (page: Page, selection: Selection[], currentUser: CurrentUser) => void
 }
 
 export type Selection = {
@@ -39,4 +39,8 @@ export type Selection = {
 export type Page = {
   id: PageNode['id']
   name: PageNode['name']
+}
+
+export type CurrentUser = {
+  name: string;
 }

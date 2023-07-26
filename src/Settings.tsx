@@ -28,7 +28,8 @@ export type Settings = UserSettings & DocumentSettings & {
 }
 
 export type DocumentSettings = {
-  fileKey: string | undefined
+  // fileKey: string | undefined
+  currentUser: string | undefined
   branchUrl: string | undefined
   title: string | undefined
   description: string | undefined
@@ -43,7 +44,8 @@ type Action =
   | { type: 'ADD_WORKFLOW'; payload: GitHubActionsWorkflow }
   | { type: 'REMOVE_WORKFLOW'; index: number }
   | { type: 'EDIT_WORKFLOW'; index: number; payload: GitHubActionsWorkflow }
-  | { type: 'EDIT_FILE_KEY'; fileKey: string }
+  // | { type: 'EDIT_FILE_KEY'; fileKey: string }
+  | { type: 'EDIT_CURRENT_USER'; currentUser: string }
   | { type: 'EDIT_BRANCH_URL'; branchUrl: string }
   | { type: 'EDIT_TITLE'; title: string }
   | { type: 'EDIT_DESCRIPTION'; description: string }
@@ -51,7 +53,8 @@ type Action =
 
 export const initialState: Settings = {
   loaded: false,
-  fileKey: undefined,
+  // fileKey: undefined,
+  currentUser: undefined,
   branchUrl: undefined,
   title: undefined,
   description: undefined,
@@ -73,8 +76,10 @@ export const useSettingsReducer = () => useReducer<Settings, Action>(produce((dr
     case 'EDIT_WORKFLOW':
       draft.workflows[action.index] = action.payload
       break
-    case 'EDIT_FILE_KEY':
-      draft.fileKey = action.fileKey
+    // case 'EDIT_FILE_KEY':
+    //   draft.fileKey = action.fileKey
+    case 'EDIT_CURRENT_USER':
+      draft.currentUser = action.currentUser
       break;
     case 'EDIT_BRANCH_URL':
       draft.branchUrl = action.branchUrl
@@ -108,11 +113,12 @@ const SettingsProvider: FunctionalComponent = ({ children }) => {
     if (settings.loaded) {
       emit<SaveSettingsHandler>('SAVE_SETTINGS', settings)
     }
-  }, [settings.workflows, settings.fileKey, settings.branchUrl, settings.title, settings.description])
+  }, [settings.workflows, settings.currentUser, settings.branchUrl, settings.title, settings.description])
 
   useEffect(function getInfo() {
-    on<InfoResponseHandler>('INFO_RESPONSE', (page, selection) => {
+    on<InfoResponseHandler>('INFO_RESPONSE', (page, selection, currentUser) => {
       dispatch({ type: 'EDIT_SELECTION', page, selection: selection })
+      dispatch({ type: 'EDIT_CURRENT_USER', currentUser: currentUser.name })
     })
 
     const interval = setInterval(() => {
