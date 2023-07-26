@@ -30,7 +30,7 @@ export default function () {
             figma.root.setPluginData("branchUrl", branchUrl || "");
             figma.root.setPluginData("title", title || "");
             figma.root.setPluginData("description", description || "");
-            console.log("Settings SAVED");
+            console.log("Settings SAVED!");
         });
     });
 
