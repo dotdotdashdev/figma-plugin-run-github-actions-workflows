@@ -30,6 +30,8 @@ export type Settings = UserSettings & DocumentSettings & {
 export type DocumentSettings = {
   fileKey: string | undefined
   branchUrl: string | undefined
+  title: string | undefined
+  description: string | undefined
 }
 
 export type UserSettings = {
@@ -43,12 +45,16 @@ type Action =
   | { type: 'EDIT_WORKFLOW'; index: number; payload: GitHubActionsWorkflow }
   | { type: 'EDIT_FILE_KEY'; fileKey: string }
   | { type: 'EDIT_BRANCH_URL'; branchUrl: string }
+  | { type: 'EDIT_TITLE'; title: string }
+  | { type: 'EDIT_DESCRIPTION'; description: string }
   | { type: 'EDIT_SELECTION'; page: Page; selection: Selection[] }
 
 export const initialState: Settings = {
   loaded: false,
   fileKey: undefined,
   branchUrl: undefined,
+  title: undefined,
+  description: undefined,
   page: undefined,
   selection: [],
   workflows: []
@@ -73,6 +79,12 @@ export const useSettingsReducer = () => useReducer<Settings, Action>(produce((dr
     case 'EDIT_BRANCH_URL':
       draft.branchUrl = action.branchUrl
       break;
+    case 'EDIT_TITLE':
+      draft.title = action.title
+      break;
+    case 'EDIT_DESCRIPTION':
+      draft.description = action.description
+      break;
     case 'EDIT_SELECTION':
       draft.page = action.page
       draft.selection = action.selection
@@ -96,7 +108,7 @@ const SettingsProvider: FunctionalComponent = ({ children }) => {
     if (settings.loaded) {
       emit<SaveSettingsHandler>('SAVE_SETTINGS', settings)
     }
-  }, [settings.workflows, settings.fileKey, settings.branchUrl])
+  }, [settings.workflows, settings.fileKey, settings.branchUrl, settings.title, settings.description])
 
   useEffect(function getInfo() {
     on<InfoResponseHandler>('INFO_RESPONSE', (page, selection) => {

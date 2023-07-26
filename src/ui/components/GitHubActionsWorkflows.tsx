@@ -5,8 +5,8 @@ import { useCallback } from 'preact/hooks'
 
 import { GitHubActionsWorkflow, useSettings } from '../../Settings'
 import { NotifyHandler } from '../../types'
-import { ManageWorkflow } from './ManageWorkflow'
 import { ButtonIcon } from './ButtonIcon'
+import { ManageWorkflow } from './ManageWorkflow'
 import { Title } from './Title'
 
 export function GitHubActionsWorkflows(): JSX.Element {
@@ -40,6 +40,8 @@ export function GitHubActionsWorkflows(): JSX.Element {
       console.group('Inputs')
         console.log('fileKey', settings.fileKey)
         console.log('branchUrl', settings.branchUrl)
+        console.log('title', settings.title)
+        console.log('description', settings.description)
         console.log('page', settings.page)
         console.log('selection', settings.selection)
       console.groupEnd()
@@ -57,6 +59,8 @@ export function GitHubActionsWorkflows(): JSX.Element {
         inputs: {
           fileKey: settings.fileKey,
           branchUrl: settings.branchUrl,
+          title: settings.title,
+          description: settings.description,
           page: JSON.stringify(settings.page),
           selection: JSON.stringify(settings.selection)
         }

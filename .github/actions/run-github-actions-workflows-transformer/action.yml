@@ -8,6 +8,12 @@ inputs:
   branchUrl:
     description: Figma branch url
     required: true
+  title:
+    description: Figma title
+    required: true
+  description:
+    description: Figma description
+    required: true
   page:
     description: Stringified selected page (id, name)
     required: true
@@ -20,6 +26,10 @@ outputs:
     description: Figma file key
   branchUrl:
     description: Figma branch url
+  title:
+    description: Figma title
+  description:
+    description: Figma description
   page:
     description: Selected page name
   selection:

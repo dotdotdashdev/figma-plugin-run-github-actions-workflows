@@ -23,6 +23,16 @@ export function Inputs(): JSX.Element {
         required
         onValueInput={branchUrl => dispatch({ type: 'EDIT_BRANCH_URL', branchUrl })}
         value={settings.branchUrl || ''} />
+      <Input
+        label='title'
+        required
+        onValueInput={title => dispatch({ type: 'EDIT_TITLE', title })}
+        value={settings.title || ''} />
+      <Input
+        label='description'
+        required
+        onValueInput={description => dispatch({ type: 'EDIT_DESCRIPTION', description })}
+        value={settings.description || ''} />
 
       <Input
         label='page'
