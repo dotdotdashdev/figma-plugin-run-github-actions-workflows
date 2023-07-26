@@ -21,7 +21,7 @@ export default function () {
       });
       
       on<SaveSettingsHandler>("SAVE_SETTINGS", function ({ currentUser, branchUrl, title, description, workflows }) {
-        // console.log({ figma, test: figma.root.name, user: figma.currentUser});
+        // console.log({ figma, rootName: figma.root.name, user: figma.currentUser});
         
         
         saveSettingsAsync<UserSettings>({ workflows }).then(() => {
