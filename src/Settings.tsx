@@ -21,10 +21,13 @@ export type GitHubActionsWorkflow = {
   ref: string
 }
 
+export type WorkflowsTriggered = GitHubActionsWorkflow & {datetime: string}
+
 export type Settings = UserSettings & DocumentSettings & {
   loaded: boolean
   page: Page | undefined
   selection: Selection[]
+  workflowsTriggered: WorkflowsTriggered[]
 }
 
 export type DocumentSettings = {
@@ -49,6 +52,7 @@ type Action =
   | { type: 'EDIT_BRANCH_URL'; branchUrl: string }
   | { type: 'EDIT_TITLE'; title: string }
   | { type: 'EDIT_DESCRIPTION'; description: string }
+  | { type: 'ADD_WORKFLOWS_TRIGGERED'; payload: WorkflowsTriggered }
   | { type: 'EDIT_SELECTION'; page: Page; selection: Selection[] }
 
 export const initialState: Settings = {
@@ -60,7 +64,8 @@ export const initialState: Settings = {
   description: undefined,
   page: undefined,
   selection: [],
-  workflows: []
+  workflows: [],
+  workflowsTriggered: []
 }
 
 export const useSettingsReducer = () => useReducer<Settings, Action>(produce((draft, action) => {
@@ -90,6 +95,9 @@ export const useSettingsReducer = () => useReducer<Settings, Action>(produce((dr
     case 'EDIT_DESCRIPTION':
       draft.description = action.description
       break;
+    case 'ADD_WORKFLOWS_TRIGGERED':
+      draft.workflowsTriggered.push(action.payload)
+      break;
     case 'EDIT_SELECTION':
       draft.page = action.page
       draft.selection = action.selection
@@ -105,6 +113,7 @@ const SettingsProvider: FunctionalComponent = ({ children }) => {
 
   useEffect(function loadSettings() {
     on<LoadSettingsHandler>('LOAD_SETTINGS', settings => {
+      console.log({settings})
       dispatch({ type: 'LOAD', payload: settings })
     })
   }, []);
@@ -113,7 +122,7 @@ const SettingsProvider: FunctionalComponent = ({ children }) => {
     if (settings.loaded) {
       emit<SaveSettingsHandler>('SAVE_SETTINGS', settings)
     }
-  }, [settings.workflows, settings.currentUser, settings.branchUrl, settings.title, settings.description])
+  }, [settings.workflows, settings.currentUser, settings.branchUrl, settings.title, settings.description, settings.workflowsTriggered])
 
   useEffect(function getInfo() {
     on<InfoResponseHandler>('INFO_RESPONSE', (page, selection, currentUser) => {

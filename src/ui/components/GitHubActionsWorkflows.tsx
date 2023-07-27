@@ -70,6 +70,13 @@ export function GitHubActionsWorkflows(): JSX.Element {
             }).then(async (response) => {
                 if (response.status === 204) {
                     emit<NotifyHandler>("NOTIFY", `Workflow "${workflow.name}" triggered!`);
+                    const currentdate = new Date();
+                    const datetime = currentdate.getMonth() + 1 + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes();
+                    const archiveWorkflow = { ...workflow, datetime };
+                    dispatch({ type: "ADD_WORKFLOWS_TRIGGERED", payload: archiveWorkflow });
+                    dispatch({ type: "EDIT_BRANCH_URL", branchUrl: "" });
+                    dispatch({ type: "EDIT_TITLE", title: "" });
+                    dispatch({ type: "EDIT_DESCRIPTION", description: "" });
                 } else {
                     const { message } = await response.json();
                     emit<NotifyHandler>("NOTIFY", message, { error: true });
@@ -108,21 +115,19 @@ export function GitHubActionsWorkflows(): JSX.Element {
 
     const uploadFile = (event: any) => {
         let file = event.target.files;
-        console.log({ test: file[0] });
 
         if (file) {
             var reader = new FileReader();
 
             reader.addEventListener("load", async function () {
                 const result = JSON.parse(typeof reader.result === "string" ? reader.result : "");
-                console.log({ result });
                 const isValid = await isValidWorkflow(result);
                 if (isValid) {
                     dispatch({ type: "ADD_WORKFLOW", payload: result });
                 }
-                const input = document.getElementById("workflow-json-upload") as HTMLInputElement
+                const input = document.getElementById("workflow-json-upload") as HTMLInputElement;
                 if (input) {
-                  input.value = ""
+                    input.value = "";
                 }
             });
             reader.readAsText(file[0]);
@@ -161,6 +166,11 @@ export function GitHubActionsWorkflows(): JSX.Element {
                 Upload file here
             </input>
             <VerticalSpace space="large" />
+            <Title>Workflows Triggered</Title>
+            <VerticalSpace space="large" />
+            {settings?.workflowsTriggered.map((workflow, index) => (
+                <Text>{workflow.name}</Text>
+            ))}
         </Fragment>
     );
 }
