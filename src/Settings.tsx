@@ -27,7 +27,6 @@ export type Settings = UserSettings & DocumentSettings & {
   loaded: boolean
   page: Page | undefined
   selection: Selection[]
-  workflowsTriggered: WorkflowsTriggered[]
 }
 
 export type DocumentSettings = {
@@ -40,6 +39,7 @@ export type DocumentSettings = {
 
 export type UserSettings = {
   workflows: GitHubActionsWorkflow[]
+  workflowsTriggered: WorkflowsTriggered[]
 }
 
 type Action =

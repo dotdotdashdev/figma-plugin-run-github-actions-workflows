@@ -113,7 +113,7 @@ export function GitHubActionsWorkflows(): JSX.Element {
         }
     }, []);
 
-    const uploadFile = (event: any) => {
+    const uploadFile = useCallback((event: any) => {
         let file = event.target.files;
 
         if (file) {
@@ -132,7 +132,7 @@ export function GitHubActionsWorkflows(): JSX.Element {
             });
             reader.readAsText(file[0]);
         }
-    };
+    }, []);
 
     return (
         <Fragment>
@@ -168,7 +168,7 @@ export function GitHubActionsWorkflows(): JSX.Element {
             <VerticalSpace space="large" />
             <Title>Workflows Triggered</Title>
             <VerticalSpace space="large" />
-            {settings?.workflowsTriggered.map((workflow, index) => (
+            {settings?.workflowsTriggered.map((workflow) => (
                 <Text>{workflow.name}</Text>
             ))}
         </Fragment>

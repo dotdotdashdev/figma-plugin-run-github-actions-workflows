@@ -20,11 +20,11 @@ export default function () {
         });
       });
       
-      on<SaveSettingsHandler>("SAVE_SETTINGS", function ({ currentUser, branchUrl, title, description, workflows }) {
+      on<SaveSettingsHandler>("SAVE_SETTINGS", function ({ currentUser, branchUrl, title, description, workflows, workflowsTriggered }) {
         // console.log({ figma, rootName: figma.root.name, user: figma.currentUser});
         
         
-        saveSettingsAsync<UserSettings>({ workflows }).then(() => {
+        saveSettingsAsync<UserSettings>({ workflows, workflowsTriggered }).then(() => {
             // figma.root.setPluginData("fileKey", fileKey || "");
             figma.root.setPluginData("currentUser", currentUser || "");
             figma.root.setPluginData("branchUrl", branchUrl || "");
