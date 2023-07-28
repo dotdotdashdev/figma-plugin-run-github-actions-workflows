@@ -1,7 +1,7 @@
-import { IconCross32, IconPlay32, Text, VerticalSpace } from "@create-figma-plugin/ui";
+import { IconCaretDown16, IconCaretRight16, IconCross32, IconPlay32, Text, VerticalSpace } from "@create-figma-plugin/ui";
 import { emit } from "@create-figma-plugin/utilities";
 import { Fragment, h, JSX } from "preact";
-import { useCallback } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 
 import { GitHubActionsWorkflow, useSettings } from "../../Settings";
 import { NotifyHandler } from "../../types";
@@ -11,6 +11,7 @@ import { Title } from "./Title";
 
 export function GitHubActionsWorkflows(): JSX.Element {
     const [settings, dispatch] = useSettings();
+    const [openIndexes, setOpenIndexes] = useState({}) as any;
 
     const isValidWorkflow = useCallback((workflow: GitHubActionsWorkflow) => {
         // https://docs.github.com/en/rest/reference/actions#get-a-workflow
@@ -72,11 +73,21 @@ export function GitHubActionsWorkflows(): JSX.Element {
                     emit<NotifyHandler>("NOTIFY", `Workflow "${workflow.name}" triggered!`);
                     const currentdate = new Date();
                     const datetime = currentdate.getMonth() + 1 + "/" + currentdate.getDate() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes();
-                    const archiveWorkflow = { ...workflow, datetime };
+                    const archiveWorkflow = {
+                        ...workflow,
+                        currentUser: settings.currentUser,
+                        branchUrl: settings.branchUrl,
+                        title: settings.title,
+                        description: settings.description,
+                        page: settings.page,
+                        selection: settings.selection,
+                        datetime,
+                    };
                     dispatch({ type: "ADD_WORKFLOWS_TRIGGERED", payload: archiveWorkflow });
                     dispatch({ type: "EDIT_BRANCH_URL", branchUrl: "" });
                     dispatch({ type: "EDIT_TITLE", title: "" });
                     dispatch({ type: "EDIT_DESCRIPTION", description: "" });
+                    setOpenIndexes({ 0: true });
                 } else {
                     const { message } = await response.json();
                     emit<NotifyHandler>("NOTIFY", message, { error: true });
@@ -161,16 +172,46 @@ export function GitHubActionsWorkflows(): JSX.Element {
             <VerticalSpace space="large" />
             <VerticalSpace space="large" />
             <Title>Add Workflow</Title>
-            <VerticalSpace space="large" />
+            <VerticalSpace space="small" />
             <input id="workflow-json-upload" type="file" accept=".json,application/json" onChange={uploadFile}>
                 Upload file here
             </input>
             <VerticalSpace space="large" />
             <Title>Workflows Triggered</Title>
+            <VerticalSpace space="small" />
+            {[...settings?.workflowsTriggered].reverse().map((workflow, index) => {
+                const showDetails = openIndexes[String(index)];
+                return (
+                    <Fragment>
+                        <VerticalSpace space="small" />
+                        <div
+                            style={{ display: "flex", alignContent: "center" }}
+                            onClick={() => {
+                                const toggle = openIndexes[index] ? !openIndexes[index] : true;
+                                const key = String(index);
+                                const updatedIndexes = { ...openIndexes, [key]: toggle };
+                                setOpenIndexes(updatedIndexes);
+                            }}>
+                            <Text style={{ fontWeight: 700 }}>{workflow.name}</Text>
+                            {showDetails ? <IconCaretDown16 style={{ marginTop: "-3px" }} /> : <IconCaretRight16 style={{ marginTop: "-3px" }} />}
+                        </div>
+                        {showDetails && (
+                            <div style={{ paddingLeft: "10px" }}>
+                                <VerticalSpace space="small" />
+                                <Text key={`${index}-${workflow.branchUrl}`}>Branch URL: {workflow.branchUrl}</Text>
+                                <VerticalSpace space="small" />
+                                <Text key={`${index}-${workflow.title}`}>Title: {workflow.title}</Text>
+                                <VerticalSpace space="small" />
+                                <Text key={`${index}-${workflow.description}`}>Description: {workflow.description}</Text>
+                                <VerticalSpace space="small" />
+                                <Text key={`${index}-${workflow.datetime}`}>Timestamp: {workflow.datetime}</Text>
+                                <VerticalSpace space="small" />
+                            </div>
+                        )}
+                    </Fragment>
+                );
+            })}
             <VerticalSpace space="large" />
-            {settings?.workflowsTriggered.map((workflow) => (
-                <Text>{workflow.name}</Text>
-            ))}
         </Fragment>
     );
 }

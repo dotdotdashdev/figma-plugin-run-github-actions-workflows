@@ -21,7 +21,7 @@ export type GitHubActionsWorkflow = {
   ref: string
 }
 
-export type WorkflowsTriggered = GitHubActionsWorkflow & {datetime: string}
+export type WorkflowsTriggered = GitHubActionsWorkflow & DocumentSettings & {datetime: string, page: Page | undefined, selection: Selection[]}
 
 export type Settings = UserSettings & DocumentSettings & {
   loaded: boolean
